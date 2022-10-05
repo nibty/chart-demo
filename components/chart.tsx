@@ -139,6 +139,7 @@ function generateChartData(
 function chartOptions(title?: string): ChartOptions<'line'> {
   return {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',

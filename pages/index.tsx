@@ -1,9 +1,12 @@
 import Head from 'next/head'
 import Grid from '@mui/material/Grid'; // Grid version 1
+import React from 'react';
 
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import {altColorPalette, MyChart, pastelColorPalette, retroColorPalette} from '../components/chart';
+import {
+  altColorPalette,
+  MyChart,
+} from '../components/chart';
 import { useRouter } from 'next/router'
 
 export default function Home() {
@@ -13,6 +16,31 @@ export default function Home() {
     queryString = '?' + queryString;
   }
 
+  const altChartOptionsShuffle = () => {
+    return [...altColorPalette].map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
+  }
+
+  const states = ['totalSupply', 'globalRank', 'totalXenStaked', 'activeMinters', 'activeStakes', 'amp', 'eaar', 'apy'];
+  const networks = [
+    {
+      color: altChartOptionsShuffle(),
+      name: 'goerli',
+      title: 'Goerli'
+    },
+    {
+      color: altChartOptionsShuffle(),
+      name: 'polygon-mumbai',
+      title: 'Polygon Mumbai'
+    },
+    {
+      color: altChartOptionsShuffle(),
+      name: 'bsc-testnet',
+      title: 'BSC Testnet'
+    },
+  ]
+
   return (
     <div className={styles.container}>
       <Head>
@@ -21,30 +49,30 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={6}>
-            <MyChart title="Event Counts Over Time" endpoint={'/v1/trends/events' + queryString} />
-          </Grid>
-          <Grid item xs={6}>
-            <MyChart title="State Averaged Over Time" endpoint={'/v1/trends/states' + queryString} />
+      <h1>XEN Charts</h1>
+
+      <main>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} height={500}>
+          <Grid item xs={12}>
+            <MyChart title="Event Counts Over Time" endpoint={'/v1/trends/events' + queryString}/>
           </Grid>
         </Grid>
 
-      </main>
+        {networks.map(network => (
+          <React.Fragment key={network.name}>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+          <h1>{network.title}</h1>
+
+          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} p={2}>
+            {states.map(state => (
+              <Grid item xs={12} sm={3} key={state}>
+                <MyChart title={state} endpoint={'/v1/trends/states?network=' + network.name + '&state=' + state} colorPalette={network.color} />
+              </Grid>
+            ))}
+          </Grid>
+          </React.Fragment>
+        ))}
+      </main>
     </div>
   )
 }
