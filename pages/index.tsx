@@ -52,7 +52,7 @@ export default function Home() {
       <h1>XEN Charts</h1>
 
       <main>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} height={500}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} height={360}>
           <Grid item xs={12}>
             <MyChart title="Event Counts Over Time" endpoint={'/v1/trends/events' + queryString}/>
           </Grid>
