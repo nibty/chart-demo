@@ -6,9 +6,6 @@ import styles from '../styles/Home.module.css'
 import {altColorPalette, MyChart, pastelColorPalette, retroColorPalette} from '../components/chart';
 import { useRouter } from 'next/router'
 
-import Multiselect from 'multiselect-react-dropdown';
-
-
 export default function Home() {
   const router = useRouter()
   let queryString = Object.keys(router.query).map(key => key + '=' + router.query[key]).join('&');
