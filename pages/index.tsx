@@ -26,6 +26,11 @@ export default function Home() {
   const networks = [
     {
       color: altChartOptionsShuffle(),
+      name: 'mainnet',
+      title: 'Mainnet'
+    },
+    {
+      color: altChartOptionsShuffle(),
       name: 'goerli',
       title: 'Goerli'
     },
