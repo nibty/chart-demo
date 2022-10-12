@@ -153,6 +153,9 @@ function chartOptions(title?: string): ChartOptions<'line'> {
       x: {
         type: 'timeseries',
       },
+      y: {
+        min: 0
+      }
     }
   }
 }

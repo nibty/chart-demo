@@ -8,12 +8,21 @@ import {
   MyChart,
 } from '../components/chart';
 import { useRouter } from 'next/router'
+import {ParsedUrlQuery} from "querystring";
 
 export default function Home() {
   const router = useRouter()
-  let queryString = Object.keys(router.query).map(key => key + '=' + router.query[key]).join('&');
+
+  let queryParams: ParsedUrlQuery = {...router.query}
+  queryParams.network = queryParams.network || 'mainnet'
+
+  let queryString = Object.keys(router.query).map(key => key + '=' + router.query[key]).join('&')
   if (queryString) {
-    queryString = '?' + queryString;
+    queryString = '?' + queryString
+  }
+
+  function stateQuery (state: string) {
+    return Object.keys(queryParams).map(key => key + '=' + queryParams[key]).join('&') + '&state=' + state;
   }
 
   const altChartOptionsShuffle = () => {
@@ -22,6 +31,7 @@ export default function Home() {
       .map(({ value }) => value)
   }
 
+
   const states = ['totalSupply', 'globalRank', 'totalXenStaked', 'activeMinters', 'activeStakes', 'amp', 'eaar', 'apy'];
   const networks = [
     {
@@ -29,21 +39,21 @@ export default function Home() {
       name: 'mainnet',
       title: 'Mainnet'
     },
-    {
-      color: altChartOptionsShuffle(),
-      name: 'goerli',
-      title: 'Goerli'
-    },
-    {
-      color: altChartOptionsShuffle(),
-      name: 'polygon-mumbai',
-      title: 'Polygon Mumbai'
-    },
-    {
-      color: altChartOptionsShuffle(),
-      name: 'bsc-testnet',
-      title: 'BSC Testnet'
-    },
+    // {
+    //   color: altChartOptionsShuffle(),
+    //   name: 'goerli',
+    //   title: 'Goerli'
+    // },
+    // {
+    //   color: altChartOptionsShuffle(),
+    //   name: 'polygon-mumbai',
+    //   title: 'Polygon Mumbai'
+    // },
+    // {
+    //   color: altChartOptionsShuffle(),
+    //   name: 'bsc-testnet',
+    //   title: 'BSC Testnet'
+    // },
   ]
 
   return (
@@ -71,7 +81,8 @@ export default function Home() {
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} p={2}>
             {states.map(state => (
               <Grid item xs={12} sm={3} key={state}>
-                <MyChart title={state} endpoint={'/v1/trends/states?network=' + network.name + '&state=' + state} colorPalette={network.color} />
+                <MyChart title={state} endpoint={'/v1/trends/states?' + stateQuery(state)}
+                         colorPalette={network.color} />
               </Grid>
             ))}
           </Grid>
